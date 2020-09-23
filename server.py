@@ -11,7 +11,7 @@ def hello():
     cur.execute("SELECT * FROM test")
     response = cur.fetchall()
     print(response)
-    return jsonify({"result": response})
+    return jsonify(response)
     
 
 app.run(host='localhost', port=5000)
