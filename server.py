@@ -7,33 +7,31 @@ app = Flask(__name__)
 conn = psycopg2.connect("dbname = python-psycopg2 user=sammaus", cursor_factory=psycopg2.extras.RealDictCursor)
 cur = conn.cursor()
 
-@app.route('/hello', methods = ['GET', 'POST'])
+@app.route('/api/owners', methods = ['GET', 'POST'])
 def hello():
     if request.method == 'GET':
-        cur.execute("SELECT * FROM test")
+        cur.execute("SELECT * FROM owner")
         response = cur.fetchall()
         print(response)
         return jsonify(response)
     else:
         name = request.form.get("name")
-        data = request.form.get("data")
-        cur.execute("INSERT INTO test (name, data) VALUES (%s, %s);", [name, data])
+        cur.execute("INSERT INTO owner (name) VALUES (%s);", [name])
         conn.commit()
         return "success", 201
 
-@app.route('/hello/<id>', methods = ['DELETE'])
-def delete_hello(id):
-    cur.execute("DELETE FROM test WHERE id = %s", id)
+@app.route('/api/owners/<id>', methods = ['DELETE'])
+def delete_owner(id):
+    cur.execute("DELETE FROM owner WHERE id = %s", [id])
     conn.commit()
     return "deleted", 200
 
-@app.route('/hello/update/<id>', methods = ['PUT'])
-def update_hello(id):
+@app.route('/api/owners/<id>', methods = ['PUT'])
+def update_owner(id):
     new_name = request.form.get("name")
-    cur.execute("UPDATE test SET name = %s WHERE id = %s;", [new_name, id])
+    cur.execute("UPDATE owner SET name = %s WHERE id = %s;", [new_name, id])
     conn.commit()
     return "updated", 201
 
+
 app.run(host='localhost', port=5000)
-
-
