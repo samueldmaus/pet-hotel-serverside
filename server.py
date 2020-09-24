@@ -21,8 +21,18 @@ def hello():
         conn.commit()
         return "success", 201
 
+@app.route('/hello/<id>', methods = ['DELETE'])
+def delete_hello(id):
+    cur.execute("DELETE FROM test WHERE id = %s", id)
+    conn.commit()
+    return "deleted", 200
 
-
+@app.route('/hello/update/<id>', methods = ['PUT'])
+def update_hello(id):
+    new_name = request.form.get("name")
+    cur.execute("UPDATE test SET name = %s WHERE id = %s;", [new_name, id])
+    conn.commit()
+    return "updated", 201
 
 app.run(host='localhost', port=5000)
 
