@@ -14,7 +14,9 @@ def hello():
         print(response)
         return jsonify(response)
     else:
-        cur.execute("INSERT INTO test (name, data) VALUES ('kevin', 23);")
+        name = request.form.get("name")
+        data = request.form.get("data")
+        cur.execute(f"INSERT INTO test (name, data) VALUES ('{name}', {data});")
         conn.commit()
         return "success"
     
