@@ -7,10 +7,11 @@ app = Flask(__name__)
 conn = psycopg2.connect("dbname = python-psycopg2 user=sammaus", cursor_factory=psycopg2.extras.RealDictCursor)
 cur = conn.cursor()
 
+# OWNER ROUTES
 @app.route('/api/owners', methods = ['GET', 'POST'])
-def hello():
+def owners():
     if request.method == 'GET':
-        cur.execute("SELECT * FROM owner")
+        cur.execute("SELECT COUNT(owner.id) AS number_of_pets, owner.name FROM pets JOIN owner ON pets.owner_id = owner.id GROUP BY owner.id;")
         response = cur.fetchall()
         print(response)
         return jsonify(response)
@@ -33,5 +34,21 @@ def update_owner(id):
     conn.commit()
     return "updated", 201
 
+# PETS ROUTES
+@app.route('/api/pets', methods = ['GET', 'POST'])
+def petsRoute():
+    if request.method == 'GET':
+        cur.execute("SELECT pets.id, owner.name AS owner_name, pets.name AS pet_name, pets.breed, pets.color, pets.checked_in, pets.checked_in_date FROM pets JOIN owner ON pets.owner_id = owner.id;")
+        response = cur.fetchall()
+        print(response)
+        return jsonify(response)
+    else:
+        pet_name = request.form.get("pet_name")
+        pet_color = request.form.get("pet_color")
+        pet_breed = request.form.get("pet_breed")
+        pet_owner_id = request.form.get("pet_owner_id")
+        cur.execute("INSERT INTO pets (name, color, breed, owner_id) VALUES (%s, %s, %s, %s);", [pet_name, pet_color, pet_breed, pet_owner_id])
+        conn.commit()
+        return "success", 201
 
 app.run(host='localhost', port=5000)
