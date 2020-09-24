@@ -51,4 +51,18 @@ def petsRoute():
         conn.commit()
         return "success", 201
 
+@app.route('/api/pets/<id>', methods = ['DELETE'])
+def deletePet(id):
+    cur.execute("DELETE FROM pets WHERE id = %s", [id])
+    conn.commit()
+    return "deleted", 201
+
+@app.route('/api/pets', methods = ['PUT'])
+def checkInPet():
+    date = request.form.get("date")
+    pet_id = request.form.get("pet_id")
+    cur.execute("UPDATE pets SET checked_in = %s, checked_in_date = %s WHERE id = %s;", [True, date, pet_id])
+    conn.commit()
+    return "updated", 201
+
 app.run(host='localhost', port=5000)
