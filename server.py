@@ -15,6 +15,7 @@ def hello():
         return jsonify(response)
     else:
         cur.execute("INSERT INTO test (name, data) VALUES ('kevin', 23);")
+        conn.commit()
         return "success"
     
 
