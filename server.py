@@ -17,7 +17,7 @@ def hello():
     else:
         name = request.form.get("name")
         data = request.form.get("data")
-        cur.execute("INSERT INTO test (name, data) VALUES (%s, %s);", {name, data})
+        cur.execute("INSERT INTO test (name, data) VALUES (%s, %s);", [name, data])
         conn.commit()
         return "success", 201
 
