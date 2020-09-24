@@ -16,8 +16,8 @@ def owners():
         print(response)
         return jsonify(response)
     else:
-        name = request.form.get("name")
-        cur.execute("INSERT INTO owner (name) VALUES (%s);", [name])
+        ownerName = request.form.get("ownerName")
+        cur.execute("INSERT INTO owner (name) VALUES (%s);", [ownerName])
         conn.commit()
         return "success", 201
 
@@ -43,10 +43,10 @@ def petsRoute():
         print(response)
         return jsonify(response)
     else:
-        pet_name = request.form.get("pet_name")
-        pet_color = request.form.get("pet_color")
-        pet_breed = request.form.get("pet_breed")
-        pet_owner_id = request.form.get("pet_owner_id")
+        pet_name = request.form.get("name")
+        pet_color = request.form.get("color")
+        pet_breed = request.form.get("breed")
+        pet_owner_id = request.form.get("owner")
         cur.execute("INSERT INTO pets (name, color, breed, owner_id) VALUES (%s, %s, %s, %s);", [pet_name, pet_color, pet_breed, pet_owner_id])
         conn.commit()
         return "success", 201
